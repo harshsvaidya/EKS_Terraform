@@ -3,18 +3,16 @@ provider "aws" {
 }
 
 # IAM Role for temporary lab access
-resource "aws_iam_role" "lab_role" {
-  name = "terraform-lab-s3-role"
+resource "aws_iam_policy" "assume_role_policy" {
+  name = "allow-assume-s3-lab-role"
 
-  assume_role_policy = jsonencode({
+  policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
       {
         Effect = "Allow"
-        Principal = {
-          AWS = "*"
-        }
         Action = "sts:AssumeRole"
+        Resource = aws_iam_role.lab_role.arn
       }
     ]
   })
